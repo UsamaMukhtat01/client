@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Header from "./Components/Header";
-import PrivateRoute from './Components/PrivateRoute';
+import PrivateRoute from './Components/privateRoute';
 
 export default function App() {
   return (
