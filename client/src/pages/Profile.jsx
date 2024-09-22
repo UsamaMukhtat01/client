@@ -1,17 +1,20 @@
 import {useSelector} from 'react-redux'
 import { useRef, useState, useEffect } from 'react'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
-import { app } from '../firebase'
+import { app } from '../firebase';
+import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice';
+import { useDispatch } from 'react-redux';
 
 export default function Profile() {
   const fileRef = useRef(null)
-const {currentUser} = useSelector((state) => state.user)
+const {currentUser, loading, error} = useSelector((state) => state.user)
 const [file, setFile] = useState(undefined);
 const [filePerc, setFilePerc] = useState(0);
 const [fileUploadError, setFileUploaError] = useState(false);
 const [formData, setFormData] = useState({})
-console.log(filePerc);
-console.log(file);
+const [updateSuccess, setUpdateSuccess] = useState(false);
+const dispatch = useDispatch();
+
 // firebase Storage 
 //       allow read, 
 //       allow write: if 
@@ -47,15 +50,46 @@ const handleFieldUpload =(file)=>{
   )
 };
 
+const handleChange = (e)=>{
+ setFormData({...formData, [e.target.id]: e.target.value})
+}
+
+const handleSubmit = async (e) =>{
+  e.preventDefault();
+  try{
+    dispatch(updateUserStart());
+    const res = await fetch(`/api/user/update/${currentUser._id}`,{
+      method:"POST",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    })
+    const data = await res.json();
+    if(data.success === false) {
+      dispatch(updateUserFailure(data.message));
+      return;
+    }
+    dispatch(updateUserSuccess(data));
+    setUpdateSuccess(true);
+
+  }catch(error){
+    dispatch(updateUserFailure(error.message))
+  }
+}
 
 return (
 <div className='p-3 max-w-lg mx-auto'>
 <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
-<form className='flex flex-col gap-3'>
+<form onSubmit={handleSubmit} className='flex flex-col gap-3'>
   <input onChange={(e)=>setFile(e.target.files[0])} type="file" ref={fileRef} hidden accept='image/*'/>
 <img onClick={()=>fileRef.current.click()} src={formData.avator || currentUser.avator} alt="profile"
 className='rounded-full h-24 w-24 object-cover
 cursor-pointer self-center mt-2' />
+
+<p className='text-green-500 self-center'>
+  {updateSuccess? 'Information updated successfuly': ''}
+</p>
 
 <p className='text-sm self-center'>
   {fileUploadError ? (
@@ -73,13 +107,13 @@ cursor-pointer self-center mt-2' />
 </p>
 
 <input id='username' type="text" placeholder='username'
-className='border p-3 rounded-lg' />
+className='border p-3 rounded-lg' defaultValue={currentUser.username} onChange={handleChange}/>
 <input id='email' type="email" placeholder='email'
-className='border p-3 rounded-lg' />
+className='border p-3 rounded-lg' defaultValue={currentUser.email} onChange={handleChange}/>
 <input id='password' type="password" placeholder='password'
-className='border p-3 rounded-lg' />
-<button className='text-white bg-stone-500 rounded-md p-2 uppercase hover:opacity-85'>
-  update
+className='border p-3 rounded-lg' defaultValue={currentUser.email} onChange={handleChange}/>
+<button disabled={loading} className='text-white bg-stone-500 rounded-md p-2 uppercase hover:opacity-85'>
+  {loading? 'Loading...':'Udpate'}
 </button>
 </form>
 <div className="flex justify-between mt-5">
@@ -87,6 +121,10 @@ className='border p-3 rounded-lg' />
 account</span>
 <span className='text-red-700 cursor-pointer'>Sign out</span>
 </div>
+<p className='text-red-500 m-3'>
+  {error? error: ''}
+</p>
+
 </div>
 )
 }
