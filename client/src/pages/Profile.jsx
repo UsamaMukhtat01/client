@@ -19,6 +19,8 @@ import {
   signOutUserFailure,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import {Link} from 'react-router-dom';
+import { FaPlus } from "react-icons/fa";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -192,6 +194,13 @@ cursor-pointer self-center mt-2"
         >
           {loading ? "Loading..." : "Udpate"}
         </button>
+      <Link
+        className="bg-green-500 text-white p-2 rounded-lg uppercase text-center hover:opacity-95 flex items-center justify-center gap-2"
+        to={"/create-listing"}
+      >
+        <span>Create Listing</span>
+        <span><FaPlus/></span>
+      </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
