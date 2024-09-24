@@ -163,6 +163,21 @@ export default function Profile() {
       console.log(error.message)
     }
   };
+
+  // const handleListingUpdate = async (listingId) =>{
+  //   try{
+  //     const res = await fetch(`/api/listing/update${listingId}`, {
+  //       method: 'POST',
+  //     });
+  //     const data = await res.json();
+  //     if (data.success === false){
+
+  //     }
+  //   }catch(error){
+
+  //   }
+  // }
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -284,9 +299,11 @@ export default function Profile() {
                 <button onClick={()=>handleListingDelete(listing._id)} className="m-3 text-red-400 hover:opacity-70">
                   <FaTrash />
                 </button>
-                <button className="m-3 text-green-400 hover:opacity-70">
+                <Link to={`/update-listing/${listing._id}`}>
+                <button onClick={()=>handleListingUpdate(listing._id)} className="m-3 text-green-400 hover:opacity-70">
                   <FaEdit />
                 </button>
+                </Link>
               </div>
             </div>
           ))}
