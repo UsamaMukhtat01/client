@@ -148,6 +148,21 @@ export default function Profile() {
     }
   };
 
+  const handleListingDelete = async (listingId) => {
+    try {
+    const res = await fetch(`/api/listing/delete/${listingId}`, {
+    method: 'DELETE',
+    });
+    const data = await res.json();
+    if (data.success === false) {
+    console.log(data.message);
+    return;
+    }
+    setUserListings ((prev) => prev.filter((listing) => listing._id !== listingId));
+    }catch(error){
+      console.log(error.message)
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -212,6 +227,18 @@ export default function Profile() {
         >
           {loading ? "Loading..." : "Udpate"}
         </button>
+        <div className="flex justify-between ">
+          <span
+            className="text-red-700 cursor-pointer"
+            onClick={handleDeleteaccount}
+          >
+            Delete account
+          </span>
+          <span className="text-red-700 cursor-pointer" onClick={handleSignOut}>
+            Sign out
+          </span>
+        </div>
+        <p className="text-red-500">{error ? error : ""}</p>
         <Link
           className="bg-green-500 text-white p-2 rounded-lg uppercase text-center hover:opacity-95 flex items-center justify-center gap-2"
           to={"/create-listing"}
@@ -222,30 +249,20 @@ export default function Profile() {
           </span>
         </Link>
       </form>
-      <div className="flex justify-between mt-5">
-        <span
-          className="text-red-700 cursor-pointer"
-          onClick={handleDeleteaccount}
-        >
-          Delete account
-        </span>
-        <span className="text-red-700 cursor-pointer" onClick={handleSignOut}>
-          Sign out
-        </span>
-      </div>
-      <p className="text-red-500 m-3">{error ? error : ""}</p>
       <button
         onClick={handleShowListings}
-        className="text-green-400 w-full bg-black p-2 rounded-lg"
+        className="my-2 text-xl w-full bg-stone-300 p-2 rounded-lg hover:opacity-85"
       >
         See Your Listings
       </button>
-      <p className="text-red-600 mt-5">
+      <p className="text-red-600 mt-2">
         {showListingsError ? "Error Showing Listings" : ""}
       </p>
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col items-center gap-2">
-          <h1 className=" text-center font-semibold text-3xl mt-6">Your Listings</h1>
+          <h1 className=" text-center font-semibold text-3xl">
+            Your Listings
+          </h1>
           {userListings.map((listing) => (
             <div
               key={listing._id}
@@ -264,7 +281,7 @@ export default function Profile() {
                 </p>
               </Link>
               <div className="flex flex-col text-2xl mr-6">
-                <button className="m-3 text-red-400 hover:opacity-70">
+                <button onClick={()=>handleListingDelete(listing._id)} className="m-3 text-red-400 hover:opacity-70">
                   <FaTrash />
                 </button>
                 <button className="m-3 text-green-400 hover:opacity-70">
