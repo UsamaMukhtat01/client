@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
+import {useSelector} from 'react-redux' 
 import { Navigation } from "swiper/modules";
 import "swiper/css/bundle";
 import { FaBath, FaBed, FaParking, FaChair} from "react-icons/fa";
+import Contact from "../Components/Contact";
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -12,6 +14,10 @@ export default function Listing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const params = useParams();
+  const {currentUser} = useSelector((state)=>state.user);
+  console.log(currentUser._id, currentUser.userRef)
+  const [contact, setContact] = useState(false);
+
   useEffect(() => {
     const fetchListing = async () => {
       try {
@@ -33,7 +39,6 @@ export default function Listing() {
     };
     fetchListing();
   }, [params.listingId]);
-  console.log(loading);
   return (
     <main>
       {loading && <p className="text-center text-2xl">loading...</p>}
@@ -80,7 +85,7 @@ export default function Listing() {
                 {listing.description} Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque provident excepturi distinctio. Sit eum quos libero inventore non architecto autem provident et, quod nostrum ut, repudiandae officia similique reprehenderit quibusdam suscipit at laudantium. Recusandae!
               </p>
               <p className="h-0.5 bg-stone-400"></p>
-              <ul className="flex flex-wrap gap-4 sm:gap-6 text-green-400 font-semibold text-sm mt-5">
+              <ul className="flex flex-wrap justify-center gap-4 sm:gap-6 text-green-400 font-semibold text-sm mt-5">
                 <li className="flex items-center gap-1 whitespace-nowrap">
                   <FaBed className="text-lg" />
                   {listing.bedrooms > 1
@@ -100,8 +105,16 @@ export default function Listing() {
                 <li className="flex items-center gap-1 whitespace-nowrap">
                   <FaChair className="text-lg" />
                   {listing.furnished ? 'Furnished':'No furnished'}
-                </li>
+                </li>              
               </ul>
+              {currentUser && listing.userRef !== currentUser._id && !contact &&(
+                  <button onClick={()=>setContact(true)} className='bg-slate-700
+                  text-white
+                  rounded-lg uppercase hover:opacity-95 p-3 mt-3'>
+                  Contact landlord
+                  </button>
+                  )}
+                  {contact && <Contact listing={listing}/>}
             </div>
           </Swiper>
         </div>
