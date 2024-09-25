@@ -60,7 +60,7 @@ export default function Listing() {
             <div className="flex flex-col max-w-fit mx-auto p-4 mt-5">
               <p className="font-semibold text-2xl">
                 {listing.name} - $
-                {listing.offer ? listing.regularPrice : listing.discountPrice}{" "}
+                {listing.offer ? listing.discountPrice.toLocaleString('en-US') : listing.regularPrice.toLocaleString('en-US') }{" "}
                 {listing.type === "rent" && "/ month"}
               </p>
               <div className="flex items-center gap-4 mt-6">
