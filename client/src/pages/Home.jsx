@@ -113,7 +113,7 @@ export default function Home() {
         </div>
         )}
         {saleListings && saleListings.length > 0 && (
-        <div className="flex flex-col gap-3 bg-stone-200 p-3 rounded-lg">
+        <div className="flex flex-col gap-3 bg-stone-300 p-3 rounded-lg">
         <div className="flex flex-col gap-5">
         <h2 className="text-3xl font-semibold text-stone-600 underline">Recent places for sale</h2>
         <Link to={'/search?type=sale'} className="w-fit" >
