@@ -61,7 +61,7 @@ export default function Home() {
           <br />
           We have wide range of properties for you to choose from.
         </div>
-        <Link to={'/search'} className="text-xs sm:text-sm text-blue-400 hover:underline">
+        <Link to={'/search'} className="text-xs sm:text-sm text-blue-400 hover:underline w-fit">
         Let's get started...
         </Link>
       </div>

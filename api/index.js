@@ -6,6 +6,7 @@ import authRouter from './routes/auth.route.js'
 import cookieParser from 'cookie-parser';
 import listingRouter from './routes/listingRoute.js';
 import path from 'path';
+import cors from 'cors';
 
 
 dotenv.config();
@@ -26,6 +27,14 @@ app.use(cookieParser());
 app.listen(3000, ()=>{
     console.log("Server is running on port 3000")
 })
+
+// Before this below code i deployed the backed but it was not working as i did not set CORS allow access to call the api's
+
+app.use(cors({
+    origin: '*',  // Allow all origins (not recommended for production)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+  }));
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
