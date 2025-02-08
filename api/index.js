@@ -36,9 +36,9 @@ app.use(cors({
     credentials: true
   }));
 
-app.use('/api/user', userRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/listing', listingRouter)
+app.use(`${process.env.API_URL}user`, userRouter);
+app.use(`${process.env.API_URL}auth`, authRouter);
+app.use(`${process.env.API_URL}listing`, listingRouter)
 
 app.use(express.static(path.join(_dirname, '/client/dist')));
 

@@ -6,7 +6,8 @@ import OAuth from '../Components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const {loading, error} = useSelector((state)=>state.user);
+  const {error} = useSelector((state)=>state.user);
+  const [loading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -19,8 +20,9 @@ export default function SignIn() {
   const handleSubmit = async (e)=>{
     e.preventDefault();
     try{
+      setIsLoading(true)
       dispatch(signInStart());
-      const res = await fetch('api/auth/signin', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}auth/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': "application/json",
@@ -38,6 +40,8 @@ export default function SignIn() {
       navigate('/profile')
     }catch(error){
       dispatch(signInFailure(error.message))
+    }finally{
+      setIsLoading(false)
     }
     
   }
