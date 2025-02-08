@@ -49,7 +49,7 @@ app.use(cors({
   }));
 
 app.use(`${process.env.API_URL}user`, userRouter);
-app.use(`${process.env.API_URL}auth`, authRouter);
+app.use(`${process.env.API_URL}api/auth`, authRouter);
 app.use(`${process.env.API_URL}listing`, listingRouter)
 
 app.use(express.static(path.join(_dirname, '/client/dist')));
