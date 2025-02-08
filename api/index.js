@@ -43,7 +43,7 @@ app.listen(PORT, ()=> {
 // Before this below code i deployed the backed but it was not working as i did not set CORS allow access to call the api's
 
 app.use(cors({
-    origin: '*',  // Allow all origins (not recommended for production)
+    origin: 'http://localhost:5173',  // Allow all origins (not recommended for production)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }));
