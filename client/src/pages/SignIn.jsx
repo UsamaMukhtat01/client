@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { signInFailure, signInStart, signInSuccess } from '../redux/user/userSlice';
 import OAuth from '../Components/OAuth';
+import { notification } from "antd";
+
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
@@ -26,6 +28,7 @@ export default function SignIn() {
       dispatch(signInStart());
       const res = await fetch(`${apiUrl}auth/signin`, {
         method: 'POST',
+        credentials: "include",
         headers: {
           'Content-Type': "application/json",
         },
@@ -35,13 +38,27 @@ export default function SignIn() {
       console.log(data)
       if (data.success === false){
         dispatch(signInFailure(data.message));
+        // setError(data.message)
+        notification.error({
+          message: "Error",
+          description: data.message,
+        });
         return;
       }
       dispatch(signInSuccess(data))
-      console.log(data);
-      navigate('/profile')
+      notification.success({
+        message: "Success",
+        description: "Signed in successfully",
+      });
+      // console.log(data);
+      navigate(`/profile/${data?._id}`)
     }catch(error){
       dispatch(signInFailure(error.message))
+      setError(error.message)
+        notification.error({
+          message: "Error",
+          description: error.message,
+        });
     }finally{
       setIsLoading(false)
     }
@@ -52,8 +69,8 @@ export default function SignIn() {
     <div className='p-3 max-w-md mx-auto'>
     <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>
       <form onSubmit={handleSubmit} id='sign-in' className='flex flex-col gap-4'>
-        <input type="text" placeholder='email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
-        <input type="text" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
+        <input type="email" placeholder='email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
+        <input type="password" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button disabled={loading} className='uppercase bg-slate-600 text-white p-2 border rounded-md text-lg hover:opacity-90 disabled:opacity-60 '>
         {loading? 'Loading...': 'Sign-In'}
         </button>
@@ -65,7 +82,7 @@ export default function SignIn() {
         <span className='text-blue-500'>Sign-up</span>
         </Link>
         </div>
-        {error && <p className='text-red-500 mt-3'>{error}</p>}
+        {/* {error && <p className='text-red-500 mt-3'>{error}</p>} */}
     </div>
     
   )

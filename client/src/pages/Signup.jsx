@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 // import { Link } from 'react-router-dom'
 import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../Components/OAuth';
+import { notification } from "antd";
+
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
@@ -20,7 +22,7 @@ export default function SignUp() {
     e.preventDefault();
     try{
       setLoading(true)
-      const res = await fetch(`${apiUrl}auth/signup`, {
+      const res = await fetch(`/api/auth/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': "application/json",
@@ -34,6 +36,10 @@ export default function SignUp() {
         setError(data.message);
         return;
       }
+      notification.success({
+        message: "Created",
+        description: data.message,
+      });
       setLoading(false);
       setError(null);
       console.log(data);
@@ -50,8 +56,8 @@ export default function SignUp() {
     <h1 className='text-3xl text-center font-semibold my-7'>SignUp</h1>
       <form onSubmit={handleSubmit} id='sign-up' className='flex flex-col gap-4'>
         <input type="text" placeholder='username' className='border p-3 rounded-lg' id='username' onChange={handleChange}/>
-        <input type="text" placeholder='email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
-        <input type="text" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
+        <input type="email" placeholder='email' className='border p-3 rounded-lg' id='email' onChange={handleChange}/>
+        <input type="password" placeholder='password' className='border p-3 rounded-lg' id='password' onChange={handleChange}/>
         <button disabled={loading} className='uppercase bg-slate-600 text-white p-2 border rounded-md text-lg hover:opacity-90 disabled:opacity-60 '>
         {loading? 'Loading...': 'Sign-Up'}
         </button>

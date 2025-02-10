@@ -23,6 +23,8 @@ import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
+import { notification } from "antd";
+
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -36,6 +38,7 @@ export default function Profile() {
   const [showListingsError, setShowListingsError] = useState(false);
   const [userListings, setUserListings] = useState([]);
 
+
   // firebase Storage
   //       allow read,
   //       allow write: if
@@ -46,6 +49,7 @@ export default function Profile() {
       handleFieldUpload(file);
     }
   }, [file]);
+
 
   const handleFieldUpload = (file) => {
     const storage = getStorage(app);
@@ -78,6 +82,7 @@ export default function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // setFormData({ ...formData, id: currentUser._id})
       dispatch(updateUserStart());
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: "POST",
@@ -91,6 +96,10 @@ export default function Profile() {
         dispatch(updateUserFailure(data.message));
         return;
       }
+      notification.success({
+        message: "Success",
+        description: "User Updated Successfully!",
+      });
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -128,6 +137,10 @@ export default function Profile() {
         return;
       }
       dispatch(signOutUserSuccess(data));
+      notification.success({
+        message: "Success",
+        description: data,
+      });
     } catch (error) {
       dispatch(signOutUserFailure(data.message));
     }
