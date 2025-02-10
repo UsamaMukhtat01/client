@@ -14,18 +14,6 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 dotenv.config();
 
 const mongoUrl = process.env.MONGO
-// const connectDB = async () => {
-//     try {
-//       await mongoose.connect(mongoUrl, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//       });
-//       console.log(mongoUrl === "mongodb://localhost:27017/" ? "Connected to local MongoDB" : "Connected to MongoDB Atlas!");
-//     } catch (error) {
-//       console.error("MongoDB Connection Error:", error);
-//     }
-//   };
-//   connectDB();
 
 const client = new MongoClient(mongoUrl, {
   serverApi: {
