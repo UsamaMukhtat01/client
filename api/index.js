@@ -15,27 +15,38 @@ dotenv.config();
 
 const mongoUrl = process.env.MONGO
 
-const client = new MongoClient(mongoUrl, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+// const client = new MongoClient(mongoUrl, {
+//   serverApi: {
+//     version: ServerApiVersion.v1,
+//     strict: true,
+//     deprecationErrors: true,
+//   },
+// });
+
+// const run = async () => {
+//   try {
+//     await client.connect();
+//     await client.db("admin").command({ ping: 1 });
+//     console.log(mongoUrl === "mongodb://localhost:27017/" ? "connected to local MongoDB!": "connected to Atlas MongoDB!");
+//   } catch (error) {
+//     console.error("Error connecting to MongoDB:", error);
+//   } finally {
+//     await client.close();
+//   }
+// };
 
 const run = async () => {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  } finally {
-    await client.close();
-  }
-};
-
-run();
+    try {
+      await mongoose.connect(mongoUrl, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      console.log(mongoUrl === "mongodb://localhost:27017/" ? "connected to local MongoDB!": "connected to Atlas MongoDB!");
+    } catch (error) {
+      console.error("MongoDB Connection Error:", error);
+      process.exit(1);
+    }
+  };
 
 
 
@@ -48,9 +59,13 @@ app.use(cookieParser());
 
 // **********************Use Azure's assigned PORT
 const PORT = process.env.PORT || 3000;  
-app.listen(PORT, ()=> {
-    console.log(`Server is running on port ${PORT}`);
-});
+run().then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  });
+  console.log(mongoose.connection.readyState);
+
 
 
 // Before this below code i deployed the backed but it was not working as i did not set CORS allow access to call the api's

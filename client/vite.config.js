@@ -15,9 +15,9 @@ export default defineConfig({
   // },
   // },
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'), // Correct placement of alias
-    },
-  },
+  // resolve: {
+  //   alias: {
+  //     '@': path.resolve(__dirname, './src'), // Correct placement of alias
+  //   },
+  // },
 })
