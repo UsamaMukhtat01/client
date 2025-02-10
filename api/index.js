@@ -7,18 +7,48 @@ import cookieParser from 'cookie-parser';
 import listingRouter from './routes/listingRoute.js';
 import path from 'path';
 import cors from 'cors';
+import { MongoClient, ServerApiVersion } from "mongodb";
+
 
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log("Connected to MongoDB Atlas!");
-}).catch((error) => {
-    console.error("MongoDB Connection Error:", error);
+const mongoUrl = process.env.MONGO
+// const connectDB = async () => {
+//     try {
+//       await mongoose.connect(mongoUrl, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//       });
+//       console.log(mongoUrl === "mongodb://localhost:27017/" ? "Connected to local MongoDB" : "Connected to MongoDB Atlas!");
+//     } catch (error) {
+//       console.error("MongoDB Connection Error:", error);
+//     }
+//   };
+//   connectDB();
+
+const client = new MongoClient(mongoUrl, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
 });
+
+const run = async () => {
+  try {
+    await client.connect();
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (error) {
+    console.error("Error connecting to MongoDB:", error);
+  } finally {
+    await client.close();
+  }
+};
+
+run();
+
 
 
 const _dirname = path.resolve();
@@ -27,11 +57,6 @@ const app = express ();
 
 app.use(express.json());
 app.use(cookieParser());
-
-// app.listen(3000, ()=>{
-//     console.log("Server is running on port 3000")
-// })
-
 
 // **********************Use Azure's assigned PORT
 const PORT = process.env.PORT || 3000;  
@@ -44,13 +69,14 @@ app.listen(PORT, ()=> {
 
 app.use(cors({
     origin: 'http://localhost:5173',  // Allow all origins (not recommended for production)
+    // origin: '*',  // Allow all origins (not recommended for production)
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }));
 
-app.use(`${process.env.API_URL}user`, userRouter);
-app.use(`https://mern-estate.azurewebsites.net/auth`, authRouter);
-app.use(`${process.env.API_URL}listing`, listingRouter)
+app.use(`/api/user`, userRouter);
+app.use(`/api/auth`, authRouter);
+app.use(`/api/listing`, listingRouter)
 
 app.use(express.static(path.join(_dirname, '/client/dist')));
 
