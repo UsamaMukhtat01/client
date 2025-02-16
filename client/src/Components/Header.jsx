@@ -45,8 +45,8 @@ export default function Header() {
       <Link to="/">
         <li className="hidden sm:inline text-stone-800 hover:underline">Home</li> </Link>
         <Link to="/about"> <li className="hidden sm:inline text-stone-800 hover:underline">About</li> </Link>        
-        <Link to="/sign-up"> 
-        {currentUser? (<img className="rounded-full h-7 w-7 objesct-cover" src={currentUser.avator} alt="profile"/>):
+        <Link to={currentUser? `/profile/${currentUser._id}` : "/sign-up"}> 
+        {currentUser? (<img className="rounded-full h-7 w-7 object-cover" src={currentUser.avator} alt="profile"/>):
         (<li className="text-stone-800 hover:underline">Sign up</li>
       )}
         </Link>

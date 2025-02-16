@@ -15,26 +15,6 @@ dotenv.config();
 
 const mongoUrl = process.env.MONGO
 
-// const client = new MongoClient(mongoUrl, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true,
-//   },
-// });
-
-// const run = async () => {
-//   try {
-//     await client.connect();
-//     await client.db("admin").command({ ping: 1 });
-//     console.log(mongoUrl === "mongodb://localhost:27017/" ? "connected to local MongoDB!": "connected to Atlas MongoDB!");
-//   } catch (error) {
-//     console.error("Error connecting to MongoDB:", error);
-//   } finally {
-//     await client.close();
-//   }
-// };
-
 const run = async () => {
     try {
       await mongoose.connect(mongoUrl, {
@@ -80,8 +60,8 @@ app.use(cors({
 app.use(`/api/user`, userRouter);
 app.use(`/api/auth`, authRouter);
 app.use(`/api/listing`, listingRouter)
-
 app.use(express.static(path.join(_dirname, '/client/dist')));
+
 
 app.get('*', (req, res) =>{
     res.sendFile(path.join(_dirname, 'client', 'dist', 'index.html'))

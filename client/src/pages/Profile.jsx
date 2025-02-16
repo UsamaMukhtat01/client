@@ -271,7 +271,7 @@ export default function Profile() {
           className="bg-green-500 text-white p-2 rounded-lg uppercase text-center hover:opacity-95 flex items-center justify-center gap-2"
           to={"/create-listing"}
         >
-          <span>Create Listing</span>
+          <span>Add Property</span>
           <span>
             <FaPlus />
           </span>
@@ -281,7 +281,7 @@ export default function Profile() {
         onClick={handleShowListings}
         className="my-2 text-xl w-full bg-stone-300 p-2 rounded-lg hover:opacity-85"
       >
-        See Your Listings
+        See Your Properties
       </button>
       <p className="text-red-600 mt-2">
         {showListingsError ? "Error Showing Listings" : ""}
@@ -289,7 +289,7 @@ export default function Profile() {
       {userListings && userListings.length > 0 && (
         <div className="flex flex-col items-center gap-2">
           <h1 className=" text-center font-semibold text-3xl">
-            Your Listings
+            Your Properties
           </h1>
           {userListings.map((listing) => (
             <div
