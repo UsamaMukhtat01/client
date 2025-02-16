@@ -5,15 +5,18 @@ import {Navigation} from 'swiper/modules'
 import swiperCore from 'swiper'
 import 'swiper/css/bundle';
 import ListingItem from "../Components/ListingItems";
+import {Spin} from 'antd';
 
 export default function Home() {
   const [offerListing, setOfferListings] = useState([]);
   const [saleListings, setSaleListings] = useState([]);
   const [rentListings, setRentListings] = useState([]);
+  const [loading, setLoading] = useState(false);
   swiperCore.use([Navigation])
   console.log(offerListing);
 
   useEffect(()=>{
+    setLoading(true)
     const fetchOfferListings = async ()=>{
       try{
         const res = await fetch('api/listing/get?offer=true&limit=4')
@@ -43,12 +46,21 @@ export default function Home() {
         log(error);
       }
     }
-    fetchOfferListings();
+    fetchOfferListings()
+    .then(()=>{
+      setLoading(false)
+    })
   },[])
 
   return (
     <div>
       {/* top */}
+      {loading? (
+        <div className="flex justify-center items-center h-screen">
+          <Spin></Spin>
+        </div>
+        ):
+          (<>
       <div className="flex flex-col gap-6 p-10 px-3 max-w-6xl mx-auto">
         <h1 className="text-stone-600 font-bold text-3xl lg:text-6xl ">
           Find your next <span className="text-stone-800">perfect</span>
@@ -56,7 +68,7 @@ export default function Home() {
           place with ease
         </h1>
         <div className="text-stone-500 sm:text-sm text-xs">
-          Sahand Estate is the best place to find your next perfect place to
+          This is the best place to find your next perfect place to
           live.
           <br />
           We have wide range of properties for you to choose from.
@@ -78,6 +90,8 @@ export default function Home() {
       {/* listing results for offer, sale and rent */}
         <div className="max-w-6xl mx-auto p-3 flex flex-col
         gap-8 my-10">
+          
+          
         {offerListing && offerListing.length > 0 && (
         <div className="flex flex-col gap-3 bg-stone-200 p-3 rounded-lg">
         <div className="flex flex-col gap-5">
@@ -130,6 +144,7 @@ export default function Home() {
         </div>
         )}
         </div>
+          </>)}
     </div>
   );
 }
